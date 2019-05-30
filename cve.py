@@ -23,9 +23,9 @@ def Select_Algo(list_algo,list_dataset):
         subprocess.call(argument,shell=True)
         Machine_Learn(name,list_dataset)
         list_algo=List_Algo()
-        select_algo=Select_Algo(list_algo,list_dataset)
-    
-    return select_algo
+        list_algo,select_algo=Select_Algo(list_algo,list_dataset)
+
+    return list_algo,select_algo
 
 def Select_Dataset(list_dataset,datasetpath):
     #Select Dataset
@@ -44,12 +44,15 @@ def Select_Dataset(list_dataset,datasetpath):
         shutil.copytree(path,destination)
         list_dataset=List_Dataset(datasetpath)
         list_dataset,select_dataset=Select_Dataset(list_dataset,datasetpath)
-    return list_dataset, select_dataset
+    return list_dataset,select_dataset
 
 #Learn new algorithm with all dataset
 def Machine_Learn(name,list_dataset):
     #exec selected algorithm in container (need to fix run.py)
     for dataset in list_dataset:
+        #Copy Dataset to container
+        
+        #Run Macine learning
         argument = 'docker exec ' + name + ' python3 run.py' + ' ' + dataset
         print(argument)
         #subprocess.call(argument,shell=True)
@@ -65,7 +68,6 @@ def List_Algo():
 
 def List_Dataset(datasetpath):
     list_dataset = os.listdir(datasetpath)
-    print("DATASET LIST =",list_dataset)
     return list_dataset
 
 #Copy Result value container to host
@@ -96,10 +98,10 @@ def main():
     list_algo=List_Algo()
     list_dataset=List_Dataset(datasetpath)
 
-    select_algo=Select_Algo(list_algo,list_dataset)
+    list_algo,select_algo=Select_Algo(list_algo,list_dataset)
     list_dataset,select_dataset=Select_Dataset(list_dataset,datasetpath)
 
-    print("#Algo=",select_algo,"Dataset=",select_dataset)
+    print("#select_Algo=",select_algo,"Dataset=",select_dataset,"list_algo=",list_algo)
 
     Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath)
     Print_Result(saveHostPath)
