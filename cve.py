@@ -4,6 +4,9 @@ import subprocess
 import docker
 import shutil
 
+datasetpath = "./dataset"
+
+
 def Select_Algo(list_algo,list_dataset):
     #Select Algorithm
     print("#Select Machinelearning Algorithms(Select 0 if you want to add an algorithm)")
@@ -21,13 +24,14 @@ def Select_Algo(list_algo,list_dataset):
         subprocess.call(argument,shell=True)
         argument = 'docker ps'
         subprocess.call(argument,shell=True)
+        Copy_Dataset_algo(name)
         Machine_Learn(name,list_dataset)
         list_algo=List_Algo()
         list_algo,select_algo=Select_Algo(list_algo,list_dataset)
 
     return list_algo,select_algo
 
-def Select_Dataset(list_dataset,datasetpath):
+def Select_Dataset(list_algo,list_dataset,datasetpath):
     #Select Dataset
     print("#Select Datasets(Select 0 if you want to add an dataset)")
     print("0 : Add dataset")
@@ -42,16 +46,31 @@ def Select_Dataset(list_dataset,datasetpath):
         path = input('#Path:')
         destination = datasetpath + '/' + name 
         shutil.copytree(path,destination)
+        Copy_Dataset_data(name,list_algo)
         list_dataset=List_Dataset(datasetpath)
-        list_dataset,select_dataset=Select_Dataset(list_dataset,datasetpath)
+        list_dataset,select_dataset=Select_Dataset(list_algo,list_dataset,datasetpath)
     return list_dataset,select_dataset
+
+#1 - make algo -> all dataset to one container
+#Copy Host dataset to new_container
+def Copy_Dataset_algo(container_name):
+    argument = 'docker cp ./dataset ' + container_name+ ':/dataset'    
+    print(argument)
+    subprocess.call(argument,shell=True)
+
+#2 - make dataset -> one dataset to all container
+def Copy_Dataset_data(dataset_name,list_algo):
+    print("INSERT COPY_DATASET_DATA")
+    print(list_algo)
+    for algo in list_algo:
+        argument = 'docker cp ./dataset/' + dataset_name + ' ' + algo + ':/dataset/'+dataset_name
+        print(argument)
+        subprocess.call(argument,shell=True)
 
 #Learn new algorithm with all dataset
 def Machine_Learn(name,list_dataset):
     #exec selected algorithm in container (need to fix run.py)
     for dataset in list_dataset:
-        #Copy Dataset to container
-        
         #Run Macine learning
         argument = 'docker exec ' + name + ' python3 run.py' + ' ' + dataset
         print(argument)
@@ -93,13 +112,13 @@ def main():
     #Select Path
     saveFilePath = "/saveResult"
     saveHostPath = "./result"
-    datasetpath = "./dataset"
-
+    #datasetpath = "./dataset"
+    print(datasetpath)
     list_algo=List_Algo()
     list_dataset=List_Dataset(datasetpath)
 
     list_algo,select_algo=Select_Algo(list_algo,list_dataset)
-    list_dataset,select_dataset=Select_Dataset(list_dataset,datasetpath)
+    list_dataset,select_dataset=Select_Dataset(list_algo,list_dataset,datasetpath)
 
     print("#select_Algo=",select_algo,"Dataset=",select_dataset,"list_algo=",list_algo)
 
