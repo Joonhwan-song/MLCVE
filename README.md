@@ -5,9 +5,10 @@
 (1)
 /cve/dataset
 
-    /saveresult
-    
-    /newbinary    
+/cve/saveresult    
+
+/cve/newbinary    
+
 /cve/에 각 폴더를 생성만 해둘것
 
 /cve/dataset -> 데이터셋이나 알고리즘이 만들어진후 호스트에서 복사한 데이터셋들이 저장될 장소
