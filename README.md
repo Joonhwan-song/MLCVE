@@ -4,7 +4,9 @@
 
 (1)
 /cve/dataset
+
     /saveresult
+    
     /newbinary    
 /cve/에 각 폴더를 생성만 해둘것
 
