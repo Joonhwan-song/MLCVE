@@ -8,6 +8,7 @@
 /cve/에 각 폴더를 생성만 해둘것
 
 /cve/dataset -> 데이터셋이나 알고리즘이 만들어진후 호스트에서 복사한 데이터셋들이 저장될 장소
+
 /cve/saveresult -> 새 바이너리 파일이 들어온후 그 결과값을 예측한 후 그 결과값을 저장될 장소
 		 ex)softmax 알고리즘에 Juliet을 학습시킬경우 파일 이름은 softmax_Juliet, 파일 내용은 softmax_Juliet 94% CWE121:Bufferoverflow
 /cve/newbinary -> 검증할 바이너리 파일이 저장될 곳(NEWBINARY->숫자 데이터셋 , NEWBINARY.png ->이미지 데이터셋 들이 저장될 예정)
