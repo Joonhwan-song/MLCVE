@@ -68,6 +68,9 @@ def Copy_Dataset_data(dataset_name,list_algo):
         argument = 'docker cp ./dataset/' + dataset_name + ' ' + algo + ':/cve/dataset/'+dataset_name
         print(argument)
         subprocess.call(argument,shell=True)
+        argument = 'docker exec ' + algo + ' python3 save.py ' + dataset_name
+        print(argument)
+        subprocess.call(argument,shell=True)
 
 #Learn new algorithm with all dataset
 def Machine_Learn(name,list_dataset):
@@ -100,6 +103,7 @@ def Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,s
 
 #Print result in host directory
 def Print_Result(saveHostPath):
+
     path_dir = saveHostPath
     file_lists = os.listdir(path_dir)
     print("RESULT")
