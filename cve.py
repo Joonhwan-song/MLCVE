@@ -3,9 +3,11 @@ import os
 import subprocess
 import docker
 import shutil
+import countconvert
 
 datasetpath = "./dataset"
-
+saveFilePath = "/cve/saveresult"
+saveHostPath = "./result"
 
 def Select_Algo(list_algo,list_dataset):
     #Select Algorithm
@@ -54,7 +56,7 @@ def Select_Dataset(list_algo,list_dataset,datasetpath):
 #1 - make algo -> all dataset to one container
 #Copy Host dataset to new_container
 def Copy_Dataset_algo(container_name):
-    argument = 'docker cp ./dataset ' + container_name+ ':/dataset'    
+    argument = 'docker cp ./dataset ' + container_name+ ':/cve/dataset/'    
     print(argument)
     subprocess.call(argument,shell=True)
 
@@ -63,7 +65,7 @@ def Copy_Dataset_data(dataset_name,list_algo):
     print("INSERT COPY_DATASET_DATA")
     print(list_algo)
     for algo in list_algo:
-        argument = 'docker cp ./dataset/' + dataset_name + ' ' + algo + ':/dataset/'+dataset_name
+        argument = 'docker cp ./dataset/' + dataset_name + ' ' + algo + ':/cve/dataset/'+dataset_name
         print(argument)
         subprocess.call(argument,shell=True)
 
@@ -72,7 +74,7 @@ def Machine_Learn(name,list_dataset):
     #exec selected algorithm in container (need to fix run.py)
     for dataset in list_dataset:
         #Run Macine learning
-        argument = 'docker exec ' + name + ' python3 run.py' + ' ' + dataset
+        argument = 'docker exec ' + name + ' python3 save.py ' + dataset
         print(argument)
         #subprocess.call(argument,shell=True)
 
@@ -108,23 +110,67 @@ def Print_Result(saveHostPath):
             os.remove(saveHostPath + '/' + file)
             f.close()
 
+#select binaryfile to explore and transform like dataset
+def Select_File(list_algo,list_dataset,select_algo,select_dataset):
+    source_path = input('Insert File Path To Explore Vulnerabilities : ')
+    save_path = './cnt'
+
+    if not os.path.isdir(save_path):
+        os.makedirs(save_path)
+    
+    outputfilename = save_path+'/New_Binary'
+
+    os.system('rm ' + outputfilename)
+    os.system('rm ' + outputfilename + '.txt')
+    os.system('flawfinder --dataonly --quiet '+ source_path +" >>" + outputfilename+".txt")
+    os.system('grep -c "78" '+ outputfilename+ ".txt >>"+ outputfilename)
+    os.system('grep -c "120" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "126" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "134" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "190" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "327" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "377" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "676" '+ outputfilename+".txt >>"+ outputfilename)
+    os.system('grep -c "785" '+ outputfilename+".txt >>"+ outputfilename)
+   
+    matrix=countconvert.getarray(outputfilename)
+    countconvert.createImage(matrix,outputfilename)
+   
+    print("Copy NEWBINARY to select algorithm")
+    for algo in select_algo:
+        argument = 'docker cp ' + outputfilename + ' ' + list_algo[int(algo)-1] + ':/cve/newbinary/'
+        subprocess.call(argument,shell=True)        
+        argument = 'docker cp ' + outputfilename + '.png ' + list_algo[int(algo)-1] + ':/cve/newbinary/'
+        subprocess.call(argument,shell=True)        
+    
+def Make_Result(list_algo,list_dataset,select_algo,select_dataset):
+    for algo in select_algo:
+        for data in select_dataset:
+            argument = 'docket exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_dataset[int(data)-1] 
+            print(argument)
+            #subprocess.call(argument,shell=True)        
+
 def main():
     #Select Path
-    saveFilePath = "/saveResult"
-    saveHostPath = "./result"
-    #datasetpath = "./dataset"
-    print(datasetpath)
+    #saveFilePath = "/cve/saveResult"
+    #saveHostPath = "./result"
+    #datasetPath
+
     list_algo=List_Algo()
     list_dataset=List_Dataset(datasetpath)
 
     list_algo,select_algo=Select_Algo(list_algo,list_dataset)
     list_dataset,select_dataset=Select_Dataset(list_algo,list_dataset,datasetpath)
 
-    print("#select_Algo=",select_algo,"Dataset=",select_dataset,"list_algo=",list_algo)
-
+    print("#select_Algo=",select_algo,"Dataset=",select_dataset)
+    
+    Select_File(list_algo,list_dataset,select_algo,select_dataset)
+    
+    Make_Result(list_algo,list_dataset,select_algo,select_dataset)    
     Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath)
     Print_Result(saveHostPath)
 
 if __name__ == '__main__':
     main()
 
+            
