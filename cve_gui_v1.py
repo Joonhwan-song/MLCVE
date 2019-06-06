@@ -208,6 +208,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.textBrowser_6 = QtWidgets.QTextBrowser(self.widget)
         self.textBrowser_6.setObjectName("textBrowser_6")
+        self.textBrowser_6.hide()
         self.gridLayout_3.addWidget(self.textBrowser_6, 0, 0, 1, 1)
         self.stackedWidget.addWidget(self.result_page)
         MainWindow.setCentralWidget(self.centralwidget)
