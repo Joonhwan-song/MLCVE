@@ -359,7 +359,7 @@ class CollaborateSystem():
         if not os.path.isdir(save_path):
             os.makedirs(save_path)
 
-        outputfilename = save_path+'/New_Binary'
+        outputfilename = save_path+'/NewBINARY'
 
         os.system('rm ' + outputfilename)
         os.system('rm ' + outputfilename + '.txt')
@@ -386,7 +386,7 @@ class CollaborateSystem():
 
 
     def Copy_Dataset_algo(self, container_name):
-        argument = 'docker cp ./dataset ' + container_name+ ':/cve/dataset/'
+        argument = 'docker cp ./dataset ' + container_name+ ':/cve/'
         print(argument)
         subprocess.call(argument,shell=True)
 
@@ -398,6 +398,9 @@ class CollaborateSystem():
             argument = 'docker cp ./dataset/' + dataset_name + ' ' + algo + ':/cve/dataset/'+dataset_name
             print(argument)
             subprocess.call(argument,shell=True)
+            argument = 'docker exec ' + algo + ' python3 save.py ' + dataset_name
+            print(argument)
+            subprocess.call(argument,shell=True)
 
     #Learn new algorithm with all dataset
     def Machine_Learn(self, name,list_dataset):
@@ -406,7 +409,7 @@ class CollaborateSystem():
             #Run Macine learning
             argument = 'docker exec ' + name + ' python3 save.py ' + dataset
             print(argument)
-            #subprocess.call(argument,shell=True)
+            subprocess.call(argument,shell=True)
 
     def closeAddAlgo(self):
         datasetpath = "./dataset"
@@ -514,7 +517,7 @@ class CollaborateSystem():
 
     def Click_Print_Result(self):
         saveHostPath = "./result"
-        saveFilePath = "/cve/saveResult"
+        saveFilePath = "/cve/saveresult"
         datasetpath = "./dataset"
         list_algo = self.List_Algo()
         list_dataset = self.List_Dataset(datasetpath)
@@ -530,7 +533,7 @@ class CollaborateSystem():
             for data in select_dataset:
                     argument = 'docker cp ' + list_algo[int(algo) -1] + ':' + saveFilePath + '/' +list_algo[int(algo)-1] + '_' + list_dataset[int(data)-1]  + ' ' + saveHostPath
                     print(argument)
-                    #subprocess.call(argument,shell=True)
+                    subprocess.call(argument,shell=True)
 
 
     def Make_Result(self, list_algo,list_dataset,select_algo,select_dataset):
@@ -538,7 +541,7 @@ class CollaborateSystem():
             for data in select_dataset:
                 argument = 'docker exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_dataset[int(data)-1]
                 print(argument)
-                #subprocess.call(argument,shell=True)        
+                subprocess.call(argument,shell=True)        
 
 
     def setUP(self):

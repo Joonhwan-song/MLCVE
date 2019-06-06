@@ -21,7 +21,7 @@ def Select_Algo(list_algo,list_dataset):
     if select_algo[0] =='0':
         print("#ADD NEW ALGORITHM")
         name = input('#Name:')
-        image = input('#Image(ex.ubuntu, tensorflow/tensorflow):')
+        image = input('#Image(ex.wnsghks30/softmax, mhiunn09/randomforest, jihyeon/cnn):')
         argument = 'docker run -i -t -d --name ' + name + ' ' + image + ' /bin/bash'
         subprocess.call(argument,shell=True)
         argument = 'docker ps'
