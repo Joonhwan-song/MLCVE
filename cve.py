@@ -56,7 +56,7 @@ def Select_Dataset(list_algo,list_dataset,datasetpath):
 #1 - make algo -> all dataset to one container
 #Copy Host dataset to new_container
 def Copy_Dataset_algo(container_name):
-    argument = 'docker cp ./dataset ' + container_name+ ':/cve/dataset/'    
+    argument = 'docker cp ./dataset ' + container_name+ ':/cve/'    
     print(argument)
     subprocess.call(argument,shell=True)
 
