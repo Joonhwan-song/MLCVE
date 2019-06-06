@@ -76,7 +76,7 @@ def Machine_Learn(name,list_dataset):
         #Run Macine learning
         argument = 'docker exec ' + name + ' python3 save.py ' + dataset
         print(argument)
-        #subprocess.call(argument,shell=True)
+        subprocess.call(argument,shell=True)
 
 
 #Save each container name to list_algo[]
@@ -118,7 +118,7 @@ def Select_File(list_algo,list_dataset,select_algo,select_dataset):
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     
-    outputfilename = save_path+'/New_Binary'
+    outputfilename = save_path+'/NEWBINARY'
 
     os.system('rm ' + outputfilename)
     os.system('rm ' + outputfilename + '.txt')
@@ -146,9 +146,9 @@ def Select_File(list_algo,list_dataset,select_algo,select_dataset):
 def Make_Result(list_algo,list_dataset,select_algo,select_dataset):
     for algo in select_algo:
         for data in select_dataset:
-            argument = 'docket exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_dataset[int(data)-1] 
+            argument = 'docker exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_dataset[int(data)-1] 
             print(argument)
-            #subprocess.call(argument,shell=True)        
+            subprocess.call(argument,shell=True)        
 
 def main():
     #Select Path
