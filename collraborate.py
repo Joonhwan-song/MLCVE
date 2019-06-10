@@ -179,7 +179,8 @@ class CollaborateSystem():
             f = open(saveHostPath + '/' + file, "r")
             line = f.readline()
             li = line.split(' ')
-            xstr = li[0] + '\n' + li[2]
+            line_cwe = li[2]
+            xstr = li[0] + '\n' + line_cwe[:6]
             x.append(xstr)
             ystr = li[1]
             y.append(int(ystr[:2]))
