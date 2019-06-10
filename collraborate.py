@@ -205,14 +205,14 @@ class CollaborateSystem():
         select_dataset = self.Clicked_Data(self.data)
         self.Select_File(list_algo, list_dataset, select_algo, select_dataset)
         self.Make_Result(list_algo,list_dataset,select_algo,select_dataset)
-        self.Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHosttPath)
+        self.Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath)
         self.Print_Result(saveHostPath)
         self.ui.ResultWidget.hide()
 
-    def Copy_Result(self, list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHosstPath):
+    def Copy_Result(self, list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath):
         for algo in select_algo:
             for data in select_dataset:
-                    argument = 'docker cp ' + list_algo[int(algo) -1] + ':' + saveFilePath + '/'+list_algo[int(algo)-1] + '_' + list_dataset[int(data)-1]  + ' ' + saveHostPath
+                    argument = 'docker cp ' + list_algo[int(algo) -1] + ':' + saveFilePath + '/' + list_algo[int(algo)-1] + '_' + list_dataset[int(data)-1]  + ' ' + saveHostPath
                     print(argument)
                     subprocess.call(argument,shell=True)
 
@@ -220,7 +220,7 @@ class CollaborateSystem():
     def Make_Result(self, list_algo,list_dataset,select_algo,select_dataset):
         for algo in select_algo:
             for data in select_dataset:
-                argument = 'docker exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_ddataset[int(data)-1]
+                argument = 'docker exec ' +list_algo[int(algo)-1] + ' python3 load.py ' + list_dataset[int(data)-1]
                 print(argument)
                 subprocess.call(argument,shell=True)
 
