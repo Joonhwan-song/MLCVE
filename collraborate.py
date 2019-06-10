@@ -207,7 +207,6 @@ class CollaborateSystem():
         self.Make_Result(list_algo,list_dataset,select_algo,select_dataset)
         self.Copy_Result(list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath)
         self.Print_Result(saveHostPath)
-        self.ui.ResultWidget.hide()
 
     def Copy_Result(self, list_algo,list_dataset,select_algo,select_dataset,saveFilePath,saveHostPath):
         for algo in select_algo:
